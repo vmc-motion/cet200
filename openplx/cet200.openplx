@@ -1,0 +1,213 @@
+# Copyright VMC Motion Technologies Co., Ltd.
+# Licensed under the Apache-2.0 license. See LICENSE.
+
+import @"../agx_file/cet200.agx" as Model_CET200_Base
+
+const MT_Ground is Physics.Charges.Material
+
+# Attach Tracks
+trait Trait_CylindricalRoadWheel:
+    # public
+    body is Physics3D.Bodies.Body
+    cylinder_position is Math.Vec3
+    wheel_axis_world is Math.Vec3: Math.Vec3.Y_AXIS()
+
+    # private
+    af_rb_wheel is Math.AffineTransform: body.kinematics.local_transform
+    af_rb_wheel_axis is Math.AffineTransform:
+        position: af_rb_wheel.position + wheel_axis_world
+    # Set the wheel axis vector relative to the body
+    local_center_axis: (af_rb_wheel.inverse() * af_rb_wheel_axis).position
+    # Set the wheel center position?
+    center_connector.position: cylinder_position
+
+
+TrackSprocket is Vehicles.Tracks.CylindricalSprocket:
+    with Trait_CylindricalRoadWheel
+
+
+TrackIdler is Vehicles.Tracks.CylindricalIdler:
+    with Trait_CylindricalRoadWheel
+
+
+TrackRoller is Vehicles.Tracks.CylindricalRoller:
+    with Trait_CylindricalRoadWheel
+
+
+Track_CET200 is Vehicles.Tracks.System:
+    belt becomes Vehicles.Tracks.FixedLinkCountBelt:
+        link_count: 46
+        link_description becomes Vehicles.Tracks.BoxLinkDescription:
+            width: 0.6
+            height: 0.135
+            contact_geometry.material: MT_Track
+    initial_distance_tension: 0.000499592
+    sprocket is TrackSprocket
+    idler is TrackIdler
+    roller_1 is TrackRoller
+    roller_2 is TrackRoller
+    roller_3 is TrackRoller
+    roller_4 is TrackRoller
+    roller_5 is TrackRoller
+    roller_6 is TrackRoller
+    roller_7 is TrackRoller
+    roller_8 is TrackRoller
+    roller_9 is TrackRoller
+    road_wheels: [sprocket, idler,
+                    roller_1, roller_2, roller_3, roller_4, 
+                    roller_5, roller_6, roller_7, roller_8, roller_9]
+    .agx_track_stabilizing_friction_parameter: 1
+    .agx_track_hinge_compliance: 1e-10
+    .agx_track_hinge_relaxation_time: 0.03333333333
+    .agx_track_min_stabilizing_normal_force: 9e4
+    .agx_track_node_wheel_merge_threshold: -0.1
+    .agx_track_node_wheel_split_threshold: -0.05
+    .agx_track_num_nodes_in_average_direction: 3
+    .agx_track_hinge_range_lower: -1.30899694
+    .agx_track_hinge_range_upper: 0.349066
+    .agx_track_on_initialize_transform_nodes_to_wheels: true
+    .agx_track_node_wheel_overlap: 1e-3
+    .agx_set_enable_merge: true
+    .agx_set_enable_lock_to_reach_merge_condition: true
+    .agx_set_num_nodes_per_merge_segment: 2
+    # setMaxAngleMergeCondition(1e-5)
+    .agx_set_contact_reduction: "MODERATE"
+    .agx_set_lock_to_reach_merge_condition_compliance: 1e-11
+    .agx_set_lock_to_reach_merge_condition_relaxation_time: 0.05
+
+# CET200
+Model_CET200 is Model_CET200_Base:
+    sprocket_radius is Real: RB_Sprocket_L.RB_Sprocket_L_Collider_0.radius
+    sprocket_width is Real: RB_Sprocket_L.RB_Sprocket_L_Collider_0.height
+    idler_radius is Real: RB_Idler_L.RB_Idler_L_Collider_1.radius
+    idler_width is Real: RB_Idler_L.RB_Idler_L_Collider_1.height
+    roller_radius is Real: RB_Roller_L1.RB_Roller_L1_Collider_1.radius
+    roller_width is Real: RB_Roller_L1.RB_Roller_L1_Collider_1.height
+
+    Track_L is Track_CET200:
+        sprocket:
+            body: RB_Sprocket_L
+            cylinder_position: RB_Sprocket_L.RB_Sprocket_L_Collider_0.local_transform.position
+            radius: sprocket_radius
+            width: sprocket_width
+        idler:
+            body: RB_Idler_L
+            radius: idler_radius
+            width: idler_width
+        roller_1:
+            body: RB_Roller_L1
+            radius: roller_radius
+            width: roller_width
+        roller_2:
+            body: RB_Roller_L2
+            radius: roller_radius
+            width: roller_width
+        roller_3:
+            body: RB_Roller_L3
+            radius: roller_radius
+            width: roller_width
+        roller_4:
+            body: RB_Roller_L4
+            radius: roller_radius
+            width: roller_width
+        roller_5:
+            body: RB_Roller_L5
+            radius: roller_radius
+            width: roller_width
+        roller_6:
+            body: RB_Roller_L6
+            radius: roller_radius
+            width: roller_width
+        roller_7:
+            body: RB_Roller_L7
+            radius: roller_radius
+            width: roller_width
+        roller_8:
+            body: RB_Roller_L8
+            radius: roller_radius
+            width: roller_width
+        roller_9:
+            body: RB_Roller_L9
+            radius: roller_radius
+            width: roller_width
+
+    Track_R is Track_CET200:
+        sprocket:
+            body: RB_Sprocket_R
+            radius: sprocket_radius
+            width: sprocket_width
+            cylinder_position: RB_Sprocket_R.RB_Sprocket_R_Collider_1.local_transform.position
+        idler:
+            body: RB_Idler_R
+            radius: idler_radius
+            width: idler_width
+        roller_1:
+            body: RB_Roller_R1
+            radius: roller_radius
+            width: roller_width
+        roller_2:
+            body: RB_Roller_R2
+            radius: roller_radius
+            width: roller_width
+        roller_3:
+            body: RB_Roller_R3
+            radius: roller_radius
+            width: roller_width
+        roller_4:
+            body: RB_Roller_R4
+            radius: roller_radius
+            width: roller_width
+        roller_5:
+            body: RB_Roller_R5
+            radius: roller_radius
+            width: roller_width
+        roller_6:
+            body: RB_Roller_R6
+            radius: roller_radius
+            width: roller_width
+        roller_7:
+            body: RB_Roller_R7
+            radius: roller_radius
+            width: roller_width
+        roller_8:
+            body: RB_Roller_R8
+            radius: roller_radius
+            width: roller_width
+        roller_9:
+            body: RB_Roller_R9
+            radius: roller_radius
+            width: roller_width
+
+# Ground
+Model_Ground is Physics3D.Bodies.RigidBody:
+    box is Physics3D.Charges.Box:
+        size: {20, 20, 1}
+        material: MT_Ground
+    visual is Visuals.Geometries.Box:
+        size: box.size
+    kinematics.local_transform.position: {0, 0, -0.5 * box.size.z}
+    is_dynamic: false
+
+
+# Materials
+Model_CM_Ground_vs_Track is Physics.Interactions.SurfaceContact.Model:
+    material_1: MT_Ground
+    material_2: MT_Track
+    normal_restitution: 0.0
+    tangential_restitution: 0.0
+    friction becomes Physics.Interactions.Dissipation.DryConstantNormalForceFriction:
+        coefficient: 1.0
+        normal_force: 20186 * 0.5
+        .agx_friction_solve_type: "DIRECT"
+    # How do I set SECONDARY_DIRECTION?
+    # cmat.setFrictionCoefficient(1, agx.ContactMaterial.PRIMARY_DIRECTION)
+    # cmat.setSurfaceViscosity(1.0E-6, agx.ContactMaterial.PRIMARY_DIRECTION)
+    # cmat.setFrictionCoefficient(0.25, agx.ContactMaterial.SECONDARY_DIRECTION)
+    # cmat.setSurfaceViscosity(6.0E-6, agx.ContactMaterial.SECONDARY_DIRECTION)
+
+
+# Scene
+Scene is Physics3D.System:
+    RB_Ground is Model_Ground
+    CET200 is Model_CET200
+    CM_Ground_vs_Track is Model_CM_Ground_vs_Track

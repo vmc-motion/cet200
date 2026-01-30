@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>cet200_description</name>
+  <version>0.0.0</version>
+  <description>VMT-CET200 hydraulic excavator model description</description>
+  <maintainer email="support@vmc-motion.com">VMC Motion Technologies Co., Ltd.</maintainer>
+  <license>Apache-2.0</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <exec_depend>ros2launch</exec_depend>
+
+  <depend>xacro</depend>
+  <depend>rviz2</depend>
+  <depend>joint_state_publisher</depend>
+  <depend>robot_state_publisher</depend>
+
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

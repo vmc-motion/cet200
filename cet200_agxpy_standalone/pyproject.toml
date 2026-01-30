@@ -1,0 +1,21 @@
+# For standard python exectuion
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cet200_agxpy_standalone"
+version = "0.0.0"
+description = "AGX Dynamics Python standalone examples for the VMT-CET200 hydraulic excavator model"
+requires-python = ">=3.9.9"
+license = { text = "Apache-2.0" }
+authors = [
+  {name = "VMC Motion Technologies Co., Ltd.", email = "support@vmc-motion.com"},
+]
+dependencies = []
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]

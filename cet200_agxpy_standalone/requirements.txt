@@ -1,0 +1,3 @@
+# For standard python exectuion
+# All requirements are described in pyproject.toml
+-e .
