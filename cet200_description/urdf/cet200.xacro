@@ -124,9 +124,9 @@
 
   <!-- Macro Crawler Belt -->
   <xacro:macro name="macro_crawler_belt" params="name:='' joint_xyz:='0 0 0'">
-    <xacro:property name="link_name" value="dummy_RB_${name}"/>
+    <xacro:property name="link_name" value="Dummy_RB_${name}"/>
 
-    <joint name="dummy_LockJoint_${name}" type="fixed">
+    <joint name="Dummy_LockJoint_${name}" type="fixed">
       <origin xyz="${joint_xyz}"  rpy="0 0 0" />
       <parent link="RB_TrackFrame" />
       <child link="${link_name}" />
@@ -148,7 +148,7 @@
   <link name="TF_Origin" />
   <link name="base_link" />
 
-  <joint name="dummy_LockJoint_RB_TrackFrame" type="fixed">
+  <joint name="Dummy_LockJoint_Origin" type="fixed">
     <parent link="TF_Origin" />
     <child link="RB_TrackFrame" />
   </joint>
@@ -167,7 +167,7 @@
   </link>
 
   <!-- Handle base_link as a dummy link. ObserverFrame in AGX -->
-  <joint name="dummy_LockJoint_RB_TrackFrame_base" type="fixed">
+  <joint name="Dummy_LockJoint_RB_TrackFrame_base" type="fixed">
     <parent link="RB_TrackFrame" />
     <child link="base_link" />
   </joint>
@@ -269,7 +269,7 @@
 
   <!-- Attachments -->
   <!-- TF_LidarBase -->
-  <joint name="dummy_LockJoint_RB_UpperStructure_RB_LidarBase" type="fixed">
+  <joint name="Dummy_LockJoint_RB_UpperStructure_RB_LidarBase" type="fixed">
     <parent link="RB_UpperStructure" />
     <child link="TF_LidarBase" />
     <origin xyz="1.17928 0.9 2.10413"  rpy="0 ${pi/4} 0" />

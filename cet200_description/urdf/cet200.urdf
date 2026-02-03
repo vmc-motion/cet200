@@ -9,7 +9,7 @@
   <!-- Links, Joints -->
   <link name="TF_Origin"/>
   <link name="base_link"/>
-  <joint name="dummy_LockJoint_RB_TrackFrame" type="fixed">
+  <joint name="Dummy_LockJoint_Origin" type="fixed">
     <parent link="TF_Origin"/>
     <child link="RB_TrackFrame"/>
   </joint>
@@ -26,7 +26,7 @@
     </visual>
   </link>
   <!-- Handle base_link as a dummy link. ObserverFrame in AGX -->
-  <joint name="dummy_LockJoint_RB_TrackFrame_base" type="fixed">
+  <joint name="Dummy_LockJoint_RB_TrackFrame_base" type="fixed">
     <parent link="RB_TrackFrame"/>
     <child link="base_link"/>
   </joint>
@@ -643,24 +643,24 @@
       </geometry>
     </collision>
   </link>
-  <joint name="dummy_LockJoint_CrawlerBelt_L" type="fixed">
+  <joint name="Dummy_LockJoint_CrawlerBelt_L" type="fixed">
     <origin rpy="0 0 0" xyz="1.6872 1.09461 0.38945"/>
     <parent link="RB_TrackFrame"/>
-    <child link="dummy_RB_CrawlerBelt_L"/>
+    <child link="Dummy_RB_CrawlerBelt_L"/>
   </joint>
-  <link name="dummy_RB_CrawlerBelt_L">
+  <link name="Dummy_RB_CrawlerBelt_L">
     <visual>
       <geometry>
         <mesh filename="package://cet200_description/meshes/crawler_belt.dae"/>
       </geometry>
     </visual>
   </link>
-  <joint name="dummy_LockJoint_CrawlerBelt_R" type="fixed">
+  <joint name="Dummy_LockJoint_CrawlerBelt_R" type="fixed">
     <origin rpy="0 0 0" xyz="1.6872 -1.09461 0.38945"/>
     <parent link="RB_TrackFrame"/>
-    <child link="dummy_RB_CrawlerBelt_R"/>
+    <child link="Dummy_RB_CrawlerBelt_R"/>
   </joint>
-  <link name="dummy_RB_CrawlerBelt_R">
+  <link name="Dummy_RB_CrawlerBelt_R">
     <visual>
       <geometry>
         <mesh filename="package://cet200_description/meshes/crawler_belt.dae"/>
@@ -669,7 +669,7 @@
   </link>
   <!-- Attachments -->
   <!-- TF_LidarBase -->
-  <joint name="dummy_LockJoint_RB_UpperStructure_RB_LidarBase" type="fixed">
+  <joint name="Dummy_LockJoint_RB_UpperStructure_RB_LidarBase" type="fixed">
     <parent link="RB_UpperStructure"/>
     <child link="TF_LidarBase"/>
     <origin rpy="0 0.7853981633974483 0" xyz="1.17928 0.9 2.10413"/>
