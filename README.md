@@ -17,8 +17,8 @@ cet200
 |-agx_file                 # AGXファイル
 |-openplx                  # (WIP)OpenPLXファイル
 |-spaceclaim_momentum      # SpaceClaim+Algoryx Momentumファイル
-|-generic_models           # 汎用モデルファイル(glb、step)
-|-tools                    # モデル変換などのツール 
+|-exchange_formats         # 汎用モデルファイル(glb、step)
+|-tools                    # モデル変換などのツール
 |-docs                     # スペックシートなどのドキュメント
 ```
 
@@ -35,11 +35,11 @@ cet200
 ### 動作確認環境
 
 - Windows 11
-    - Python 3.9.9
-    - AGX-2.40.1.5
+  - Python 3.9.9
+  - AGX-2.40.1.5
 - Ubuntu 22.04(ROS2 Humble)
-    - Python 3.10.12
-    - AGX-2.41.1.0
+  - Python 3.10.12
+  - AGX-2.41.1.0
 
 ### Pythonコマンドでサンプルプログラムを実行する
 
@@ -71,7 +71,7 @@ python cet200_on_terrain.py
 # AGXの環境変数が設定されたシェル
 # インストール
 mkdir -p ~/ros_ws/src
-cd ~/ros_ws/src 
+cd ~/ros_ws/src
 git clone <REPO>
 
 # 依存パッケージのインストール
@@ -116,7 +116,7 @@ URDFモデル。
 cet200_agxpy_standaloneを参考にcolcon build後に次のコマンドを実行する。
 
 ```shell
-ros2 launch cet200_description display.launch.py 
+ros2 launch cet200_description display.launch.py
 ```
 
 ## その他
