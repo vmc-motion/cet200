@@ -15,7 +15,7 @@ def convert_glb_to_glb(input_filepath, output_filepath):
         print(f"Input file not found: {input_filepath}")
         return
 
-    # Clear current scene
+    # Clear current scenes
     bpy.ops.wm.read_factory_settings(use_empty=True)
 
     # Import glb file
@@ -105,9 +105,9 @@ if __name__ == "__main__":
     script_dir = Path(__file__).parent
     os.chdir(script_dir)
 
-    glb_dir = "../generic_models"
-    parts_dir = "../generic_models/parts"
-    dae_dir = "../cet200_description/meshes"
+    glb_dir = (script_dir / "../exchange_formats").resolve().as_posix()
+    parts_dir = (script_dir / "../exchange_formats/parts").resolve().as_posix()
+    dae_dir = (script_dir / "../cet200_description/meshes").resolve().as_posix()
 
     convert_glb_to_glb_all(glb_dir)
     convert_glb_to_dae_all(parts_dir, dae_dir)
