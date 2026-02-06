@@ -145,6 +145,7 @@ ros2 launch cet200_description display.launch.py
 
 ## その他
 
+- [プログラムが参照するモデルファイル](docs/program_dependent_model_files.md)
 - [3Dモデル変換パイプライン](docs/3d_modeling_pipeline.md)
 
 ## Contact
