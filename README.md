@@ -41,7 +41,7 @@ cet200
 - OS: Ubuntu (Windowsは未確認)
 - ROS2
 
-### spaceclaim_momentum
+### spaceclaim_momentum 要件
 
 - OS: Windows (Ubuntu非対応)
 - Ansys SpaceClaim >= 2024 R2
@@ -157,3 +157,4 @@ support@vmc-motion.com
 Copyright 2026 VMC Motion Technologies Co., Ltd.  
 Licensed under the Apache-2.0 license.
 See [LICENSE](LICENSE) and [Notice](NOTICE).
+
