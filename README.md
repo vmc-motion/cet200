@@ -18,7 +18,7 @@ cet200
 |-cet200_description       # URDFモデル
 |-agx_file                 # AGXファイル
 |-openplx                  # (WIP)OpenPLXファイル
-|-spaceclaim_momentum      # SpaceClaim+Algoryx Momentumファイル
+|-spaceclaim_momentum      # SpaceClaim + Algoryx Momentumファイル
 |-exchange_formats         # 汎用モデルファイル(glb、step)
 |-tools                    # モデル変換などのツール
 |-docs                     # スペックシートなどのドキュメント
@@ -30,7 +30,7 @@ cet200
 
 - OS: Windows、Ubuntu
 - AGX Dynamics >= 2.40.1.5
-    - License modules: Core、Terrain、Granular
+    - License modules: Core、Tracks、Terrain、Granular
     - 参考: [VMT Developer Portal(外部サイト)](https://developer.vmc-motion.com)
     - [お問合せ・トライアルライセンスの申し込み(外部サイト)](https://www.vmc-motion.com/%E3%81%8A%E5%95%8F%E3%81%84%E5%90%88%E3%82%8F%E3%81%9B/)
 - Python: AGX Dynamicsが対応しているPythonバージョン
@@ -116,19 +116,19 @@ ros2 run cet200_agxpy_standalone cet200_on_terrain
 
 ```shell
 # ゲームパッド（XInput方式)
-LB、RB: 前進
-LT、RT: 後退
-左スティック左右: 旋回
-左スティック上下: アーム上げ下げ
-右スティック左右: バケット掘削、ダンプ
-右スティック上下: ブーム上げ下げ
+前進: LB、RB
+後退: LT、RT 
+旋回: 左スティック左右
+アーム上げ下げ: 左スティック上下 
+バケット掘削、ダンプ: 右スティック左右 
+ブーム上げ下げ: 右スティック上下: 
 
 # キーボード
-カーソルキー: 走行
-a、s: 旋回
-m、,: ブーム上げ下げ
-z、x: アーム上げ下げ
-j、k: バケット掘削、ダンプ
+走行: カーソルキー 
+旋回: a、s 
+アーム上げ下げ: z、x 
+ブーム上げ下げ: m、, 
+バケット掘削、ダンプ: j、k 
 ```
 
 ## cet200_description
