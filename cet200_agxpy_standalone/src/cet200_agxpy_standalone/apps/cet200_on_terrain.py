@@ -122,7 +122,7 @@ def buildScene():
 # Entry point when this script is started with ros2
 def main():
     # Colcon injects the console_scripts command name to sys.argv[0], but AGX must read this file path for loading.
-    sys.argv[0] = Path(__file__).resolve()
+    sys.argv[0] = str(Path(__file__).resolve())
     init = init_app(name="__main__", scenes=[(buildScene, '1')])
 
 
