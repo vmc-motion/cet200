@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package format="3">
   <name>cet200_description</name>
-  <version>2026.2.0</version>
+  <version>2026.2.1-dev</version>
   <description>VMT-CET200 hydraulic excavator model description</description>
   <maintainer email="support@vmc-motion.com">VMC Motion Technologies Co., Ltd.</maintainer>
   <license>Apache-2.0</license>
