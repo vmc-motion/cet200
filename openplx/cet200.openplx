@@ -3,23 +3,36 @@
 
 import @"../agx_file/cet200.agx" as Model_CET200_Base
 
-const MT_Ground is Physics.Charges.Material
+const MT_Ground is Physics.Geometries.Material
+
+const Globals:
+    LEFT_AXIS is Math.Vec3: Math.Vec3.Y_AXIS()
+    FORWARD_AXIS is Math.Vec3: Math.Vec3.X_AXIS()
+
 
 # Attach Tracks
 trait Trait_CylindricalRoadWheel:
+    .doc: """
+Trait for RoadWheels models that lets the user specify wheel rotation axis in world space 
+through the variable world_center_axis, instead of setting local_center_axis directely. 
+local_center_axis of RoadWheel will be calculated automatically from by converting
+world_center_axis to the local transform space of the body.
+It also allows for offsetting the wheel center relative to its body through local_cylinder_position,
+which is defined in body local transform space.
+"""
     # public
-    body is Physics3D.Bodies.Body
-    cylinder_position is Math.Vec3
-    wheel_axis_world is Math.Vec3: Math.Vec3.Y_AXIS()
+    # body_ref is Physics3D.Bodies.Body reference
+    local_cylinder_position is Math.Vec3  # cylinder collider local transform, used to position wheel center
+    world_center_axis is Math.Vec3: Globals.LEFT_AXIS
 
     # private
-    af_rb_wheel is Math.AffineTransform: body.kinematics.local_transform
-    af_rb_wheel_axis is Math.AffineTransform:
-        position: af_rb_wheel.position + wheel_axis_world
     # Set the wheel axis vector relative to the body
-    local_center_axis: (af_rb_wheel.inverse() * af_rb_wheel_axis).position
-    # Set the wheel center position?
-    center_connector.position: cylinder_position
+    local_center_axis: body.kinematics.local_transform.inverse().transform_vec3_vector(world_center_axis)
+    # Set the wheel local center position to that of collision cylinder
+    center_connector.position: local_cylinder_position
+
+    # center_connector becomes Physics3D.Interactions.StructuralPlanarConnector:
+    #     position: {0, 0, 0}
 
 
 TrackSprocket is Vehicles.Tracks.CylindricalSprocket:
@@ -56,38 +69,54 @@ Track_CET200 is Vehicles.Tracks.System:
     road_wheels: [sprocket, idler,
                     roller_1, roller_2, roller_3, roller_4, 
                     roller_5, roller_6, roller_7, roller_8, roller_9]
+    # agxVehicle.TrackProperties
     .agx_track_stabilizing_friction_parameter: 1
-    .agx_track_hinge_compliance: 1e-10
-    .agx_track_hinge_relaxation_time: 0.03333333333
+    .agx_track_hinge_compliance: 1e-9
+    .agx_track_hinge_relaxation_time: 0.0333  # 2.0 / 60  # hinge damping
     .agx_track_min_stabilizing_normal_force: 9e4
     .agx_track_node_wheel_merge_threshold: -0.1
     .agx_track_node_wheel_split_threshold: -0.05
     .agx_track_num_nodes_in_average_direction: 3
-    .agx_track_hinge_range_lower: -1.30899694
-    .agx_track_hinge_range_upper: 0.349066
+    # TODO: How to do setEnableHingeRange(True) ?
+    .agx_track_hinge_range_lower: -1.308996939 # TODO: Function Math.Functions.deg_to_rad(-75.0) does not appear to work
+    .agx_track_hinge_range_upper: 0.349066 # TODO: Function Math.Functions.deg_to_rad(20.0) does not appear to work
     .agx_track_on_initialize_transform_nodes_to_wheels: true
     .agx_track_node_wheel_overlap: 1e-3
+    # agxVehicle.TrackInternalMergeProperties
     .agx_set_enable_merge: true
     .agx_set_enable_lock_to_reach_merge_condition: true
     .agx_set_num_nodes_per_merge_segment: 2
-    # setMaxAngleMergeCondition(1e-5)
+    # TODO: How to do setMaxAngleMergeCondition(1e-5) ?
     .agx_set_contact_reduction: "MODERATE"
     .agx_set_lock_to_reach_merge_condition_compliance: 1e-11
     .agx_set_lock_to_reach_merge_condition_relaxation_time: 0.05
+    # TODO: How to do trackNode..getMassProperties().setMass(34.0) ?
+
 
 # CET200
 Model_CET200 is Model_CET200_Base:
-    sprocket_radius is Real: RB_Sprocket_L.RB_Sprocket_L_Collider_0.radius
-    sprocket_width is Real: RB_Sprocket_L.RB_Sprocket_L_Collider_0.height
-    idler_radius is Real: RB_Idler_L.RB_Idler_L_Collider_1.radius
-    idler_width is Real: RB_Idler_L.RB_Idler_L_Collider_1.height
-    roller_radius is Real: RB_Roller_L1.RB_Roller_L1_Collider_1.radius
-    roller_width is Real: RB_Roller_L1.RB_Roller_L1_Collider_1.height
+    # Imported model references (modify to match imported model)
+    sprocket_L_cylinder is Physics3D.Geometries.Cylinder reference: RB_Sprocket_L.Collider_0
+    sprocket_R_cylinder is Physics3D.Geometries.Cylinder reference: RB_Sprocket_R.Collider_1
+    idler_L_cylinder is Physics3D.Geometries.Cylinder reference: RB_Idler_L.Collider_1
+    roller_L1_cylinder is Physics3D.Geometries.Cylinder reference: RB_Roller_L1.Collider_1
+    
+    # Wheel dimensions, derived from referenced cylinders above (i.e. no need to modify directly)
+    sprocket_radius is Real: sprocket_L_cylinder.radius
+    sprocket_width is Real: sprocket_L_cylinder.height
+    idler_radius is Real: idler_L_cylinder.radius
+    idler_width is Real: idler_L_cylinder.height
+    roller_radius is Real: roller_L1_cylinder.radius
+    roller_width is Real: roller_L1_cylinder.height
+
+    # Assumptions:
+    # - All wheel bodies are aligned with the plane defined by the sprocket wheel cylinder collider
+    # - All wheels of same type (sprocket, idler, roller) have the same dimensions
 
     Track_L is Track_CET200:
         sprocket:
             body: RB_Sprocket_L
-            cylinder_position: RB_Sprocket_L.RB_Sprocket_L_Collider_0.local_transform.position
+            local_cylinder_position: sprocket_L_cylinder.local_transform.position
             radius: sprocket_radius
             width: sprocket_width
         idler:
@@ -98,14 +127,17 @@ Model_CET200 is Model_CET200_Base:
             body: RB_Roller_L1
             radius: roller_radius
             width: roller_width
+            .agx_track_wheel_split_segments: true
         roller_2:
             body: RB_Roller_L2
             radius: roller_radius
             width: roller_width
+            .agx_track_wheel_split_segments: true
         roller_3:
             body: RB_Roller_L3
             radius: roller_radius
             width: roller_width
+            .agx_track_wheel_split_segments: true
         roller_4:
             body: RB_Roller_L4
             radius: roller_radius
@@ -130,13 +162,14 @@ Model_CET200 is Model_CET200_Base:
             body: RB_Roller_L9
             radius: roller_radius
             width: roller_width
+            .agx_track_wheel_split_segments: true
 
     Track_R is Track_CET200:
         sprocket:
             body: RB_Sprocket_R
             radius: sprocket_radius
             width: sprocket_width
-            cylinder_position: RB_Sprocket_R.RB_Sprocket_R_Collider_1.local_transform.position
+            local_cylinder_position: sprocket_R_cylinder.local_transform.position
         idler:
             body: RB_Idler_R
             radius: idler_radius
@@ -145,14 +178,17 @@ Model_CET200 is Model_CET200_Base:
             body: RB_Roller_R1
             radius: roller_radius
             width: roller_width
+            .agx_track_wheel_split_segments: true
         roller_2:
             body: RB_Roller_R2
             radius: roller_radius
             width: roller_width
+            .agx_track_wheel_split_segments: true
         roller_3:
             body: RB_Roller_R3
             radius: roller_radius
             width: roller_width
+            .agx_track_wheel_split_segments: true
         roller_4:
             body: RB_Roller_R4
             radius: roller_radius
@@ -177,10 +213,29 @@ Model_CET200 is Model_CET200_Base:
             body: RB_Roller_R9
             radius: roller_radius
             width: roller_width
+            .agx_track_wheel_split_segments: true
+
+    # Turn on motors to be able to control machine
+    Hinge_Sprocket_R_motor.enabled: true
+    Hinge_Sprocket_L_motor.enabled: true
+    Hinge_Slew_motor.enabled: true
+    Prismatic_Boom_motor.enabled: true
+    Prismatic_Arm_motor.enabled: true
+    Prismatic_Bucket_motor.enabled: true
+
+    signal_interface is Physics.Signals.SignalInterface:
+        enable: true  # Set enable to true, this will enable all output signals in the interface
+        sprocket_R_vel_input is Physics.Signals.Input: Hinge_Sprocket_R_motor.target_angular_velocity_input
+        sprocket_L_vel_input is Physics.Signals.Input: Hinge_Sprocket_L_motor.target_angular_velocity_input
+        slew_vel_input is Physics.Signals.Input: Hinge_Slew_motor.target_angular_velocity_input
+        boom_vel_input is Physics.Signals.Input: Prismatic_Boom_motor.target_linear_velocity_input 
+        arm_vel_input is Physics.Signals.Input: Prismatic_Arm_motor.target_linear_velocity_input 
+        bucket_vel_input is Physics.Signals.Input: Prismatic_Bucket_motor.target_linear_velocity_input 
+
 
 # Ground
 Model_Ground is Physics3D.Bodies.RigidBody:
-    box is Physics3D.Charges.Box:
+    box is Physics3D.Geometries.Box:
         size: {20, 20, 1}
         material: MT_Ground
     visual is Visuals.Geometries.Box:
@@ -190,24 +245,40 @@ Model_Ground is Physics3D.Bodies.RigidBody:
 
 
 # Materials
-Model_CM_Ground_vs_Track is Physics.Interactions.SurfaceContact.Model:
+CM_Ground_vs_Track is Physics.Interactions.SurfaceContact.Model:
     material_1: MT_Ground
     material_2: MT_Track
     normal_restitution: 0.0
     tangential_restitution: 0.0
-    friction becomes Physics.Interactions.Dissipation.DryConstantNormalForceFriction:
+
+    # friction becomes Physics.Interactions.Dissipation.DryConstantNormalForceFriction:
+    #     coefficient: 1.0
+    #     normal_force: 20186 * 0.5
+    #     .agx_friction_solve_type: "DIRECT"
+
+    friction becomes Physics.Interactions.Dissipation.DryConstantNormalForceFriction with Physics3D.Interactions.SurfaceContact.Traits.BodyOrientedFriction, Physics3D.Interactions.SurfaceContact.Traits.OrientedSurfaceViscosity:
         coefficient: 1.0
         normal_force: 20186 * 0.5
         .agx_friction_solve_type: "DIRECT"
-    # How do I set SECONDARY_DIRECTION?
-    # cmat.setFrictionCoefficient(1, agx.ContactMaterial.PRIMARY_DIRECTION)
-    # cmat.setSurfaceViscosity(1.0E-6, agx.ContactMaterial.PRIMARY_DIRECTION)
-    # cmat.setFrictionCoefficient(0.25, agx.ContactMaterial.SECONDARY_DIRECTION)
-    # cmat.setSurfaceViscosity(6.0E-6, agx.ContactMaterial.SECONDARY_DIRECTION)
+    
+        # Trait BodyOrientedFriction attributes
+        primary_direction: Math.Vec3.X_AXIS()
+        secondary_coefficient: 0.25  # friction in secondary direction
+
+        # Trait OrientedSurfaceViscosity attributes
+        viscosity: 1.0E-6
+        secondary_viscosity: 6.0E-6
+
+        # NOTE: The above trait settings for oriented friction and viscosity do currently
+        #       not seem to completely work, especially not when imported by AGX Unity.
 
 
 # Scene
 Scene is Physics3D.System:
     RB_Ground is Model_Ground
+    
     CET200 is Model_CET200
-    CM_Ground_vs_Track is Model_CM_Ground_vs_Track
+
+    CM_Ground_vs_Track is CM_Ground_vs_Track:
+        friction.primary_direction: CET200.RB_TrackFrame.kinematics.local_transform.inverse().transform_vec3_vector(Globals.FORWARD_AXIS)
+        friction.reference_body: CET200.RB_TrackFrame
