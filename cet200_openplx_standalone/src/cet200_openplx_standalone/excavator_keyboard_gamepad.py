@@ -1,14 +1,21 @@
 # Copyright VMC Motion Technologies Co., Ltd.
 # Licensed under the Apache-2.0 license. See LICENSE.
 
-# Enables keyboard and gamepad control, with following key mapping:
-# Keyboard:
+# Enables keyboard and gamepad control with following bindings:
+#  --- Keyboard ---
 #   Slew: a/s
 #   Arm: z/x
 #   Boom: m/, (comma)
 #   Bucket: j/k
 #   Move forward/backward: up/down arrow
 #   Turn left/right: left/right arrow
+# --- Gamepad ---
+#   Slew: Left stick horizontal
+#   Arm: Left stick vertical
+#   Boom: Right stick vertical
+#   Bucket: Right stick horizontal
+#   Move forward: Left and right trigger
+#   Move backward: Left and right bumper
 
 
 # Python imports
@@ -37,13 +44,12 @@ class MaxSpeeds:
 
 @dataclass
 class ExcavatorInputs:
-    import openplx
-    sprocket_R_vel: openplx.Physics.Signals.Input  # openplx.Physics._OPENPLX_Physics_Signals_AngularVelocity1DInput
-    sprocket_L_vel: openplx.Physics.Signals.Input  # openplx.Physics._OPENPLX_Physics_Signals_AngularVelocity1DInput
-    slew_vel: openplx.Physics.Signals.Input  # openplx.Physics._OPENPLX_Physics_Signals_AngularVelocity1DInput
-    boom_vel: openplx.Physics.Signals.Input  # openplx.Physics._OPENPLX_Physics_Signals_LinearVelocity1DInput
-    arm_vel: openplx.Physics.Signals.Input  # openplx.Physics._OPENPLX_Physics_Signals_LinearVelocity1DInput
-    bucket_vel: openplx.Physics.Signals.Input  # openplx.Physics._OPENPLX_Physics_Signals_LinearVelocity1DInput
+    sprocket_R_vel: openplx.Physics.Signals.Input
+    sprocket_L_vel: openplx.Physics.Signals.Input
+    slew_vel: openplx.Physics.Signals.Input
+    boom_vel: openplx.Physics.Signals.Input
+    arm_vel: openplx.Physics.Signals.Input
+    bucket_vel: openplx.Physics.Signals.Input
 
 
 def handle_stick_dead_zone(raw_value):
@@ -152,7 +158,6 @@ def _setup_gamepad(inputs: ExcavatorInputs, input_queue: agxOpenPLX.InputSignalQ
     if Gamepad.instance() is None:
         print("WARNING: Gamepad controls deactivated.")
 
-    # Bind events to the pov buttons
     def bind_gamepad_axis(axis: Gamepad.Axis, callback):
         name = f"Axis.{axis.name}"
         Gamepad.bind(name=name, axis=axis, callback=callback)
