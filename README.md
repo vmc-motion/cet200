@@ -76,7 +76,7 @@ cd cet200
 
 # 【推奨】仮想環境の作成と有効化
 python -m venv .venv
-.venv\Scrpits\activate
+.venv\Scripts\activate
 
 # cet200_agxpy_standalone pythonパッケージのeditableインストール
 cd cet200_agxpy_standalone
