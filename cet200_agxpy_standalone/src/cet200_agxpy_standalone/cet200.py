@@ -25,7 +25,6 @@ base_dir = Path(__file__).resolve().parent
 g_agx_file_path = (base_dir / "../../../agx_file/cet200.agx").resolve().as_posix()
 g_bucket_agx_file_path = (base_dir / "../../../agx_file/cet200_bucket.agx").resolve().as_posix()
 g_shoe_visual_path = (base_dir / "../../../agx_file/track_shoelink.obj").resolve().as_posix()
-g_texture_file = (base_dir / "../../../agx_file/track_shoelink.mtl").resolve().as_posix()
 
 
 def dump_object_names(assembly: agxSDK.Assembly):
@@ -78,24 +77,7 @@ def create_track(track_name, rb_sprocket, rb_idler, rb_rollers):
 
 def set_track_shoe_visual(track: agxVehicle.Track):
     shoe_visual_data = agxOSG.readNodeFile(g_shoe_visual_path, False)
-
-    # if True:
-    #     # agxOSG.setTexture(shoe_visual_data, g_texture_file, True, agxOSG.DIFFUSE_TEXTURE, 0.4, 1.8)
-    #     agxOSG.setTexture(shoe_visual_data, g_texture_file, True, agxOSG.DIFFUSE_TEXTURE, 1, 1)
-    # if True:
-    #     color = agx.Vec4f(0.10, 0.11, 0.12, 1.0)
-    #     agxOSG.setDiffuseColor(shoe_visual_data, color)
-    #     agxOSG.setAmbientColor(shoe_visual_data, color * 0.2)
-    #     # agxOSG.setSpecularColor(shoe_visual_data, vagx.saturateVec4f(desc.color * 2.0))
-    #     agxOSG.setShininess(shoe_visual_data, 128)
-
-    # def find_track_node_size() -> agx.Vec3:
-    #     rb = track.nodes()[0].getRigidBody()
-    #     geometry = rb.getGeometries()[0]
-    #     box = geometry.getShapes()[0].asBox()
-    #     return box.getHalfExtents()
-
-    # print(find_track_node_size())
+    agxOSG.setDiffuseColor(shoe_visual_data, agx.Vec4f(0.37, 0.37, 0.37, 1.0))
 
     rotation = agx.AffineMatrix4x4()
     rotation.setRotate(agx.EulerAngles(0, -agx.PI_2, 0))
