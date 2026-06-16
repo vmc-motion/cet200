@@ -70,8 +70,8 @@ def buildScene1():
 
     # Add materials
     mt_ground = agx.Material("MT_Ground")
-    mt_wheel = agx.Material("MT_Wheel")
-    mt_track = agx.Material("MT_Track")
+    mt_wheel = agx.Material("MT_CET200_Wheel")
+    mt_track = agx.Material("MT_CET200_Track")
     sim.add(mt_ground)
     sim.add(mt_wheel)
     sim.add(mt_track)

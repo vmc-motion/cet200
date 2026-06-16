@@ -40,7 +40,7 @@ Track_CET200 is Vehicles.Tracks.System:
         link_description becomes Vehicles.Tracks.BoxLinkDescription:
             width: 0.6
             height: 0.135
-            contact_geometry.material: MT_Track
+            contact_geometry.material: MT_CET200_Track
     initial_distance_tension: 0.000499592
     sprocket is TrackSprocket
     idler is TrackIdler
@@ -192,7 +192,7 @@ Model_Ground is Physics3D.Bodies.RigidBody:
 # Materials
 Model_CM_Ground_vs_Track is Physics.Interactions.SurfaceContact.Model:
     material_1: MT_Ground
-    material_2: MT_Track
+    material_2: MT_CET200_Track
     normal_restitution: 0.0
     tangential_restitution: 0.0
     friction becomes Physics.Interactions.Dissipation.DryConstantNormalForceFriction:
